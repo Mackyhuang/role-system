@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vip.ifmm.rolesystem.mapper.SysAclMapper">
+    <select id="listAcl" resultType="vip.ifmm.rolesystem.entity.SysAcl">
+        SELECT a_id, name, url
+          FROM sys_acl
+          WHERE status = 1
+    </select>
+
+    <select id="listAclDetail" resultType="vip.ifmm.rolesystem.entity.SysAcl">
+        SELECT a_id, code, name, acl_module_id, url, type, seq, remark,
+            operator, operate_time, operate_ip
+        FROM sys_acl
+        WHERE status = 1
+    </select>
+
+    <insert id="saveAcl" parameterType="vip.ifmm.rolesystem.entity.SysAcl">
+        INSERT INTO
+            sys_acl(a_id, code, name, acl_module_id, url, type,
+                    status, seq, remark, operator, operate_time, operate_ip)
+        VALUES (#{aId}, #{code}, #{name}, #{aclModuleId}, #{url}, #{type},
+                #{status}, #{seq}, #{remark}, #{operator},
+                        #{operateTime}, #{operateIp})
+    </insert>
+
+    <update id="updateAcl" parameterType="vip.ifmm.rolesystem.entity.SysAcl">
+        UPDATE sys_acl
+        <set>
+            <if test="code != null">
+                code = #{code},
+            </if>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="aclModuleId != null">
+                acl_module_id = #{aclModuleId},
+            </if>
+            <if test="url != null">
+                url = #{url},
+            </if>
+            <if test="type != null">
+                type = #{type},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="seq != null">
+                seq = #{seq},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+            <if test="operator != null">
+                operator = #{operator},
+            </if>
+            <if test="operateTime != null">
+                operate_time = #{operateTime},
+            </if>
+            <if test="operateIp != null">
+                operate_ip = #{operateIp},
+            </if>
+        </set>
+        WHERE a_id = #{aId}
+    </update>
+
+    <update id="removeAcl" parameterType="vip.ifmm.rolesystem.entity.SysAcl">
+        update sys_acl
+        <set>
+            <if test="1 == 1">
+                status = 2,
+            </if>
+            <if test="operator != null">
+                operator = #{operator},
+            </if>
+            <if test="operateTime != null">
+                operate_time = #{operateTime},
+            </if>
+            <if test="operateIp != null">
+                operate_ip = #{operateIp},
+            </if>
+        </set>
+        WHERE a_id = #{aId}
+    </update>
+
+    <select id="getAcl" resultType="vip.ifmm.rolesystem.entity.SysAcl">
+        SELECT
+            a_id, code, name, acl_module_id, url, type, status, seq, remark,
+            operator, operate_time, operate_ip
+        FROM sys_acl
+        WHERE a_id = #{aId}
+    </select>
+</mapper>

@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="vip.ifmm.rolesystem.mapper.SysUserMapper">
+
+    <resultMap id="userMap" type="vip.ifmm.rolesystem.entity.SysUser">
+        <id property="uId" column="u_id" />
+        <result property="username" column="username" />
+        <result property="password" column="password" />
+        <result property="telephone" column="telephone" />
+        <result property="mail" column="mail" />
+        <result property="deptId" column="dept_id" />
+        <result property="status" column="status" />
+        <result property="remark" column="remark" />
+        <result property="operator" column="operator" />
+        <result property="operateTime" column="operate_time" />
+        <result property="operateIp" column="operate_ip" />
+        <collection property="roles" ofType="vip.ifmm.rolesystem.entity.SysRole">
+            <id property="rId" column="r_id" />
+            <result property="name" column="name" />
+            <result property="type" column="type" />
+            <result property="status" column="status" />
+            <result property="remark" column="remark" />
+            <result property="operator" column="operator" />
+            <result property="operateTime" column="operate_time" />
+            <result property="operateIp" column="operate_ip" />
+            <collection property="acls" ofType="vip.ifmm.rolesystem.entity.SysAcl">
+                <id property="aId" column="a_id" />
+                <result property="code" column="code"/>
+                <result property="name" column="name" />
+                <result property="aclModuleId" column="acl_module_id" />
+                <result property="url" column="url" />
+                <result property="type" column="type" />
+                <result property="status" column="status" />
+                <result property="seq" column="seq" />
+                <result property="remark" column="remark" />
+                <result property="operator" column="operator" />
+                <result property="operateTime" column="operate_time" />
+                <result property="operateIp" column="operate_ip" />
+            </collection>
+        </collection>
+    </resultMap>
+
+    <select id="getUserByUsername" parameterType="string" resultMap="userMap">
+        SELECT u.*, r.*, p.*
+        FROM sys_user u
+            INNER JOIN sys_role_user ru ON ru.user_id = u.u_id
+            INNER JOIN sys_role r ON r.r_id = ru.role_id
+            INNER JOIN sys_role_acl ra ON ra.role_id = r.r_id
+            INNER JOIN sys_acl p ON p.a_id = ra.acl_id
+        WHERE u.username = #{username}
+    </select>
+
+    <select id="listUser" resultType="vip.ifmm.rolesystem.entity.SysUser">
+        SELECT u_id, username, password, telephone, mail, dept_id, status,
+            remark, operator, operate_time, operate_ip
+        FROM sys_user
+        WHERE status = 1
+    </select>
+
+    <insert id="saveUser" parameterType="vip.ifmm.rolesystem.entity.SysUser">
+        INSERT INTO sys_user(u_id, username, password, dept_id, remark, operator,
+        operate_time, operate_ip)
+                VALUES (#{uId}, #{username}, #{password}, #{deptId}, #{remark}, #{operator},
+                        #{operateTime}, #{operateIp})
+    </insert>
+
+    <update id="updateUser" parameterType="vip.ifmm.rolesystem.entity.SysUser">
+        UPDATE sys_user
+        <set>
+            <if test="username != null">
+                username = #{username},
+            </if>
+            <if test="password != null">
+                password = #{password},
+            </if>
+            <if test="deptId != null">
+                dept_id = #{deptId},
+            </if>
+            <if test="remark != null">
+                remark = #{remark},
+            </if>
+            <if test="operator != null">
+                operator = #{operator},
+            </if>
+            <if test="operateTime != null">
+                operate_time = #{operateTime},
+            </if>
+            <if test="operateIp != null">
+                operate_ip = #{operateIp},
+            </if>
+        </set>
+        WHERE u_id = #{uId}
+    </update>
+    <update id="removeUser" parameterType="vip.ifmm.rolesystem.entity.SysUser">
+        update sys_user
+        <set>
+            <if test="1 == 1">
+                status = 2,
+            </if>
+            <if test="operator != null">
+                operator = #{operator},
+            </if>
+            <if test="operateTime != null">
+                operate_time = #{operateTime},
+            </if>
+            <if test="operateIp != null">
+                operate_ip = #{operateIp},
+            </if>
+        </set>
+        WHERE u_id = #{uId}
+    </update>
+    <select id="getUser" resultType="vip.ifmm.rolesystem.entity.SysUser">
+        SELECT
+            u_id, username, password, telephone, mail, dept_id, status, remark,
+            operator, operate_time, operate_ip
+        FROM sys_user
+        WHERE u_id = #{uID}
+    </select>
+</mapper>
